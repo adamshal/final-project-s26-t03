@@ -1,15 +1,16 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/-Acvnhrq)
+
 # Final Project
 
 **Team Number:**
 
 **Team Name:**
 
-| Team Member Name | Email Address       |
-|------------------|---------------------|
-| [Name 1]         | [Email 1]           |
-| [Name 2]         | [Email 2]           |
-| [Name 3]         | [Email 3]           |
+| Team Member Name  | Email Address           |
+| ----------------- | ----------------------- |
+| Adam Shalabi      | adamshal@seas.upenn.edu |
+| Brandon Parkansky | bpar@seas.upenn.edu     |
+| Panos Dimtsoudis  | panosdim@seas.upenn.edu |
 
 **GitHub Repository URL:**
 
@@ -57,9 +58,7 @@ Here, you will define any special terms, acronyms, or abbreviations you plan to 
 
 ### 7. Bill of Materials (BOM)
 
-
 ### 8. Final Demo Goals
-
 
 ### 9. Sprint Planning
 
@@ -116,6 +115,4 @@ If you’ve never made a GitHub pages website before, you can follow this webpag
 
 ### 4. Conclusion
 
-
 ## References
-
