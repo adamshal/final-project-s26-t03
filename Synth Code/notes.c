@@ -60,6 +60,17 @@ const uint32_t note_phase_inc[NUM_GUITAR_NOTES] PROGMEM = {
     /*  E6  */ 181254898UL,
 };
 
+void note_name_get(uint8_t idx, char buf[4])
+{
+    uint8_t i = 0;
+    char    c;
+    while ((c = (char)pgm_read_byte(&note_names[idx][i])) != '\0') {
+        buf[i] = c;
+        i++;
+    }
+    buf[i] = '\0';
+}
+
 const char note_names[NUM_GUITAR_NOTES][4] PROGMEM = {
     "E2",  "F2",  "F#2", "G2",  "G#2",
     "A2",  "A#2", "B2",  "C3",  "C#3",

@@ -38,7 +38,9 @@ static volatile uint8_t  g_fret_changed = 0U;
 static volatile uint8_t  g_active_fret  = FRET_NONE;
 static volatile uint32_t g_ms_tick      = 0UL;
 
-static uint8_t g_note_idx = GUITAR_NOTE_E3;
+static uint8_t  g_note_idx           = GUITAR_NOTE_E3;
+static uint8_t  g_is_muted           = 0U;
+static uint32_t g_strum_visual_until = 0UL;
 
 /* Configures Timer0 for a 1 ms system tick interrupt. */
 static void timer0_init(void)
@@ -180,7 +182,7 @@ static void run_test_mode(void)
         inputs_adc_scan();
 
         char name[4];
-        strcpy_P(name, note_names[idx]);
+        note_name_get(idx, name);
 
         uart_puts_P(PSTR("Note: "));
         uart_puts(name);
@@ -225,10 +227,12 @@ int main(void)
         if (g_strum_flag) {
             g_strum_flag = 0U;
             envelope_trigger();
+            g_strum_visual_until = g_ms_tick + 100UL;
         }
 
         if (g_mute_flag) {
             g_mute_flag = 0U;
+            g_is_muted  = 1U;
             envelope_release();
             synth_mute();
         }
@@ -237,6 +241,7 @@ int main(void)
             uint8_t fret   = g_active_fret;
             g_fret_changed = 0U;
             if (fret < 5U) {
+                g_is_muted = 0U;
                 g_note_idx = fret_note_map[fret];
                 synth_set_note(g_note_idx);
             } else {
@@ -254,7 +259,11 @@ int main(void)
 
         if (g_ms_tick - last_display_ms >= 50UL) {
             last_display_ms = g_ms_tick;
-            display_update(g_note_idx, inputs_whammy);
+            bool strumming  = (g_ms_tick < g_strum_visual_until);
+            display_update_ui(g_note_idx,
+                              (uint8_t)(inputs_whammy >> 2),
+                              (bool)g_is_muted,
+                              strumming);
         }
 
         {

@@ -1,6 +1,6 @@
 /*
- * display.c — SSD1306 128x64 OLED driver over TWI
- * ESE3500 Final Project — Guitar Synthesizer Controller
+ * display.c ? SSD1306 128x64 OLED driver over TWI
+ * ESE3500 Final Project ? Guitar Synthesizer Controller
  * Team 3: Synth Specialist (Guitar Hero Edition)
  * Authors: Adam Shalabi, Brandon Parkansky, Panos Dimtsoudis
  */
@@ -21,7 +21,7 @@
 
 volatile uint8_t g_display_dirty = 0U;
 
-/* 5x8 ASCII font covering 0x20–0x7E, one column per byte, stored in flash. */
+/* 5x8 ASCII font covering 0x20?0x7E, one column per byte, stored in flash. */
 static const uint8_t font5x8[95][5] PROGMEM = {
     {0x00,0x00,0x00,0x00,0x00}, /* 0x20  ' ' */
     {0x00,0x00,0x5F,0x00,0x00}, /* 0x21  '!' */
@@ -123,28 +123,28 @@ static const uint8_t font5x8[95][5] PROGMEM = {
 /* Blocks until the TWI hardware signals completion. */
 static void twi_wait(void)
 {
-    while (!(TWCR & (1 << TWINT)));
+    while (!(TWCR0 & (1 << TWINT)));
 }
 
 /* Sends a TWI START condition. */
 static void twi_start(void)
 {
-    TWCR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN);
+    TWCR0 = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN);
     twi_wait();
 }
 
 /* Sends a TWI STOP condition. */
 static void twi_stop(void)
 {
-    TWCR = (1 << TWINT) | (1 << TWSTO) | (1 << TWEN);
-    while (TWCR & (1 << TWSTO));
+    TWCR0 = (1 << TWINT) | (1 << TWSTO) | (1 << TWEN);
+    while (TWCR0 & (1 << TWSTO));
 }
 
 /* Loads one byte into TWDR and clocks it out. */
 static void twi_write(uint8_t b)
 {
-    TWDR = b;
-    TWCR = (1 << TWINT) | (1 << TWEN);
+    TWDR0 = b;
+    TWCR0 = (1 << TWINT) | (1 << TWEN);
     twi_wait();
 }
 
@@ -203,9 +203,9 @@ static uint8_t expand_nibble(uint8_t nibble)
 /* Initialises TWI at 400 kHz and brings the SSD1306 out of reset. */
 void display_init(void)
 {
-    TWSR &= ~((1 << TWPS1) | (1 << TWPS0));
-    TWBR  = TWI_TWBR_400K;
-    TWCR  = (1 << TWEN);
+    TWSR0 &= ~((1 << TWPS1) | (1 << TWPS0));
+    TWBR0  = TWI_TWBR_400K;
+    TWCR0  = (1 << TWEN);
 
     oled_cmd (0xAE);
     oled_cmd2(0xD5, 0x80);
@@ -278,7 +278,7 @@ void display_print_note(uint8_t note_index)
         return;
     }
     char name[4];
-    strcpy_P(name, note_names[note_index]);
+    note_name_get(note_index, name);
     display_print_string(name);
 }
 
@@ -316,7 +316,7 @@ void display_update_ui(uint8_t note_index, uint8_t whammy,
     uint8_t  buf_len = 0U;
 
     if (note_index < NUM_GUITAR_NOTES) {
-        strcpy_P(name, note_names[note_index]);
+        note_name_get(note_index, name);
     }
 
     for (uint8_t ci = 0U; name[ci] != '\0' && buf_len < 46U; ci++) {

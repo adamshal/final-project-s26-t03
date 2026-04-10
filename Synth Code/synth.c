@@ -112,9 +112,12 @@ void synth_set_note(uint8_t note_idx)
         return;
     }
     g_base_phase_inc = pgm_read_dword(&note_phase_inc[note_idx]);
+    uint8_t sreg = SREG;
+    cli();
     apply_bend();
     g_phase_acc = 0UL;
     g_muted     = 0U;
+    SREG = sreg;
 }
 
 /* Silences the audio output. */
@@ -129,5 +132,8 @@ void synth_set_bend(int8_t semitones)
     if (semitones < -12) semitones = -12;
     if (semitones >  12) semitones =  12;
     g_bend_idx = (uint8_t)(semitones + 12);
+    uint8_t sreg = SREG;
+    cli();
     apply_bend();
+    SREG = sreg;
 }
